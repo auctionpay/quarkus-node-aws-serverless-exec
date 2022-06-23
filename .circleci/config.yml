@@ -34,7 +34,7 @@ jobs:
           name: Save Docker image layer cache
           command: |
             mkdir -p /caches
-            docker save -o /caches/utility-quarkus-serverless-aws.tar app
+            docker save -o /caches/utility-quarkus-serverless-aws.tar utility-quarkus-serverless-aws
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
