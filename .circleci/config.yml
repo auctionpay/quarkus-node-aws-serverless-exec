@@ -1,16 +1,5 @@
 version: 2.1
 
-orbs:
-  slack: circleci/slack@4.9.3
-
-parameters:
-  slack_failure_custom_template:
-    type: string
-    default: '{"blocks":[{"type":"header","text":{"type":"plain_text","text":":henners: Uh Oh! CircleCi Job Failed","emoji":true}},{"type":"section","fields":[{"type":"mrkdwn","text":"*Job name*: ${CIRCLE_JOB}"}]},{"type":"section","fields":[{"type":"mrkdwn","text":"*Project*: $CIRCLE_PROJECT_REPONAME"},{"type":"mrkdwn","text":"*Branch*: $CIRCLE_BRANCH"},{"type":"mrkdwn","text":"*Author*: $CIRCLE_USERNAME"}]},{"type":"actions","elements":[{"type":"button","text":{"type":"plain_text","text":"View Job"},"url":"${CIRCLE_BUILD_URL}"}]}]}'
-  slack_deployment_succeeded_custom_template:
-    type: string
-    default: '{"blocks":[{"type":"header","text":{"type":"plain_text","text":":gools: CircleCi Successfully Deployed","emoji":true}},{"type":"section","fields":[{"type":"mrkdwn","text":"*Branch*: $CIRCLE_BRANCH"},{"type":"mrkdwn","text":"*Project*: $CIRCLE_PROJECT_REPONAME"},{"type":"mrkdwn","text":"*Job name*: $CIRCLE_JOB"},{"type":"mrkdwn","text":"*Author*: $CIRCLE_USERNAME"}]},{"type":"actions","elements":[{"type":"button","text":{"type":"plain_text","text":"View Job"},"url":"${CIRCLE_BUILD_URL}"}]}]}'
-
 jobs:
   build:
     working_directory: /utility-quarkus-serverless-aws
@@ -46,16 +35,8 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "circleci-project-setup" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
               docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
               docker tag utility-quarkus-serverless-aws "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_SHA1}"
               docker push "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_SHA1}"
             fi
-      - slack/notify:
-          event: fail
-          channel: bitbucket-pipelines
-          custom: << pipeline.parameters.slack_failure_custom_template >>
-      - slack/notify:
-          event: pass
-          channel: bitbucket-pipelines
-          custom: << pipeline.parameters.slack_deployment_succeeded_custom_template >>
