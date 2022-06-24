@@ -35,10 +35,10 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            # if [ "${CIRCLE_BRANCH}" == "main" ]; then
+            if [ "${CIRCLE_BRANCH}" == "circleci-project-setup" ]; then
               docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 #              docker tag utility-quarkus-serverless-aws "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_SHA1}"
               docker tag utility-quarkus-serverless-aws "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest"
 #             docker push "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_SHA1}"
               docker push "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest"
-            # fi
+            fi
