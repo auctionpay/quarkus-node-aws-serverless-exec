@@ -4,7 +4,8 @@ jobs:
   build:
     working_directory: /utility-quarkus-serverless-aws
     docker:
-      - image: docker:17.05.0-ce-git
+      # This is an official docker image and tags can be found here https://hub.docker.com/_/docker/
+      - image: docker:20.10-git
     steps:
       - checkout
       # remote docker helps avoid the docker in docker problem
@@ -37,6 +38,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "circleci-project-setup" ]; then
               docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
-              docker tag utility-quarkus-serverless-aws "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest"
-              docker push "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest"
+              docker tag utility-quarkus-serverless-aws "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest" "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_BUILD_NUM}"
+              docker push "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:latest" "${DOCKER_ACCOUNT}/utility-quarkus-serverless-aws:${CIRCLE_BUILD_NUM}"
             fi
